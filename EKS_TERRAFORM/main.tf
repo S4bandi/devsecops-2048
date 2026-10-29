@@ -31,6 +31,14 @@ data "aws_subnets" "public" {
     name   = "vpc-id"
     values = [data.aws_vpc.default.id]
   }
+  filter {
+    name   = "default-for-az"          # only AWS's default subnets (public, auto-assign IP)
+    values = ["true"]
+  }
+  filter {
+    name   = "availability-zone"
+    values = ["us-east-1a", "us-east-1b", "us-east-1c"]   # skip us-east-1e (no EKS)
+  }
 }
 #cluster provision
 resource "aws_eks_cluster" "example" {
